@@ -1,0 +1,44 @@
+﻿@page "/"
+@using MauiApp2.Models
+@using MauiApp2.Services
+@inject UserService UserService
+
+<h3>User Info</h3>
+@if (user == null)
+{
+    <p>Loading ....</p>
+}
+else
+{
+    <p><b>Username:</b> @user.Username</p>
+    <p><b>Email:</b> @user.Email</p>
+    <p><b>Role:</b> @user.Role</p>
+    <p><b>Age:</b> @user.Age</p>
+}
+
+@code {
+    User user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var list = await UserService.GetUsersAsync();
+            foreach (var li in list)
+            {
+                user = new User
+                {
+                    Age = li.Age,
+                    Email = li.Email,
+                    Id = li.Id,
+                    Role = li.Role,
+                    Username = li.Username
+                };
+            }
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+    
+}
